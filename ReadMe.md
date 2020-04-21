@@ -8,6 +8,12 @@ Is in `./report/` and all the plots are stored in `./src/results/` and that is w
 
 Most of the tables of data are automatically generated although there is one manual one which is stored in the report dir.
 
+### rough spread of projects in the corpus
+![rough spread of CI](src/results/sub%20vs%20stars.png)
+
+### language CI usage
+![language CI usage](src/results/languages-scatter-CI.png)
+
 
 ## data
 
