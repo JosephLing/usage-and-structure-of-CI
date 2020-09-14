@@ -166,9 +166,9 @@ We chose to use a config file to specify which CI systems configuration files we
 
 In terms of which configuration files to pick we based our list from Github Welcomes all CI Tools blog post in 2017 \cite{Github2017}. In addition we added Github Actions and Azure Pipelines to the list as they are new and potentially popular systems. 
 
-\begin{figure}[h]
+\begin{figure}[!t]
   \centering
-  \includegraphics[width=\textwidth]{methadology diagram.pdf}
+  \includegraphics[width=2.5in]{methadology diagram.pdf}
   
   \caption[alt text]{Diagram of the process used to search for projects with CI files in them}
   \label{image_methadolgoy_diagram}
@@ -179,9 +179,9 @@ Another potential solution would have been to use the \enquote{filename:travis.y
 
 As the config could have mistakes in it or we missed out a major CI system. We also saved the ReadMe.md when we scraped each project. A Readme.md is used to describe a project and will be displayed on Github at the bottom of the root directory. As can be seen in Figure \ref{ExampleGithubReadme} some ReadMe's have a label and/or links to the CI system used for that project. Therefore we also saved that data when we scraped a project. 
 
-\begin{figure}[h]
+\begin{figure}[!t]
   \centering
-  \includegraphics[scale=0.5, width=\textwidth]{2020-01-30-08-29-04.png}
+  \includegraphics[scale=0.5, width=2.5in]{2020-01-30-08-29-04.png}
   
   \caption[alt text]{Example of CI tag for Github ReadMe \cite{GithubReadMeExample}}
   \label{ExampleGithubReadme}
@@ -195,7 +195,7 @@ Along with information of what CI is being used for a project we also gathered m
 
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=0.5, width=\textwidth]{readme metadata example.png}
+  \includegraphics[scale=0.5, width=2.5in]{readme metadata example.png}
   \caption[alt text]{Example Github project description and metadata\cite{GithubMetaDataExample}. The orange sections sections highlighted are the metadata that we scraped.}
   \label{ExampleGithubMetaData}
 \end{figure}
@@ -208,7 +208,7 @@ This all produced a sample of 32,660 projects from open source projects on Githu
 
 \begin{figure}[!htbp]
   \centering
-  \includegraphics[width=\textwidth]{../src/results/sub vs stars.pdf}
+  \includegraphics[width=2.5in]{../src/results/sub vs stars.pdf}
   \caption[alt text]{Github stars against subscribers}
   \label{graph_scatter_stars_vs_subs}
 \end{figure}
@@ -227,13 +227,13 @@ In order to get a better understanding of the results of the methodologies chose
   \centering
   \begin{minipage}{.48\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../src/results/density_2016.pdf}
+    \includegraphics[width=2.5in]{../src/results/density_2016.pdf}
     \caption[]{2016 corpus}
     \label{graph:hist2016}
   \end{minipage}
   \begin{minipage}{.48\textwidth}
     \centering
-  \includegraphics[width=\textwidth]{../src/results/density_2020.pdf}
+  \includegraphics[width=2.5in]{../src/results/density_2020.pdf}
   \caption[]{2020 corpus}
   \label{graph:hist2020}
   \end{minipage}
@@ -296,13 +296,13 @@ In Table \ref{table_config_types} we, like all other research, found that Travis
   \centering
   \begin{minipage}{.48\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../src/results/comparison_config_bar.pdf}
+    \includegraphics[width=2.5in]{../src/results/comparison_config_bar.pdf}
     \caption[]{2016 corpus}
     \label{graph:config_bar2016}
   \end{minipage}
   \begin{minipage}{.48\textwidth}
     \centering
-  \includegraphics[width=\textwidth]{../src/results/config-topn.pdf}
+  \includegraphics[width=2.5in]{../src/results/config-topn.pdf}
   \caption[]{2020 corpus}
   \label{graph:config_bar2020}
   \end{minipage}
@@ -562,7 +562,7 @@ Figure \ref{fig:lines_structure_all} gives the initial breakdown of the structur
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=\textwidth]{../src/results/line structure all.pdf}
+  \includegraphics[width=2.5in]{../src/results/line structure all.pdf}
   \caption[alt text]{Mean of line counts for all CI configuration types. Showing the blank, coded and commented line average breakdown.}
   \label{fig:lines_structure_all}
 \end{figure}
@@ -572,7 +572,7 @@ Figure \ref{fig:lines_structure_yaml} shows only the yaml based configurations, 
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=\textwidth]{../src/results/line structure yaml.pdf}
+  \includegraphics[width=2.5in]{../src/results/line structure yaml.pdf}
   \caption[alt text]{Mean of line counts but only for yaml based configuration. Giving a clearer view on the breakdown of how little blank lines and comments are used.}
   \label{fig:lines_structure_yaml}
 \end{figure}
@@ -582,7 +582,7 @@ The blue line which represents code that has a comment after is the most commonl
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=\textwidth]{../src/results/line structure yaml comments.pdf}
+  \includegraphics[width=2.5in]{../src/results/line structure yaml comments.pdf}
   \caption[alt text]{Mean of line counts for comments, code with comments, single line comments and multiple line comments for yaml configuration files}
   \label{fig:lines_structure_yaml_comments}
 \end{figure}
@@ -591,7 +591,7 @@ The blue line which represents code that has a comment after is the most commonl
 In the case of Jenkins pipelines and Teamcity there is a much higher usage of having code with comments. Therefore we have separated the analysis and comparison from Figure \ref{fig:lines_structure_all} to Figure \ref{fig:lines_structure_none_yaml} for the non yaml based configuration. Jenkins and Teamcity configurations is Kotlins based and for TeamCity is also xml based. The key difference we find here is that multiple line comments are more common than code with comments when compared to the yaml configuration. The second key difference is a much higher mean number of lines for comments. These two difference are probably combined because both Kotlins and xml allow block comments which allow for multi-line comments to be done easily. 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=\textwidth]{../src/results/line structure none yaml comments.pdf}
+  \includegraphics[width=2.5in]{../src/results/line structure none yaml comments.pdf}
   \caption[alt text]{Mean of line counts for comments, code with comments, single line comments and multiple line comments for none yaml configuration files}
   \label{fig:lines_structure_none_yaml}
 \end{figure}
@@ -606,7 +606,7 @@ We have looked at the structure of the file and the what kind of comments are us
   \end{minipage}%
   \hfill
   \begin{minipage}[!t]{.48\textwidth}
-    \includegraphics[width=\textwidth]{../src/results/comments usage bars.pdf}
+    \includegraphics[width=2.5in]{../src/results/comments usage bars.pdf}
     \caption[alt text]{Comment types}
     \label{fig:comment_types}  
   \end{minipage}
@@ -633,7 +633,7 @@ Another potential reason is that it is easier to write the logic needed for the 
 These are interesting results and in order to be able know the reasoning for the high numbers further research needs to be done.
 
 \begin{figure}[!ht]
-  \includegraphics[width=\textwidth]{../src/results/scripts usage bars.pdf}
+  \includegraphics[width=2.5in]{../src/results/scripts usage bars.pdf}
   \caption[alt text]{Mean script usage for each file}
   \label{fig:script_usage}  
 \end{figure}
@@ -651,13 +651,13 @@ As some of the logic is defined in the external scripts and not in the CI file. 
 \begin{figure}[!ht]
   \centering
   \begin{minipage}[!t]{.48\textwidth}
-    \includegraphics[width=\textwidth]{../src/results/scripts vs lines.pdf}
+    \includegraphics[width=2.5in]{../src/results/scripts vs lines.pdf}
     \caption{number scripts to number lines with the extreme values cropped out. This shows a slight trend in the more lines you have the more scripts you will use.}
     \label{fig:script_scatter_lines}    
   \end{minipage}%
   \hfill
   \begin{minipage}[!t]{.48\textwidth}
-    \includegraphics[width=\textwidth]{../src/results/scripts vs stars.pdf}
+    \includegraphics[width=2.5in]{../src/results/scripts vs stars.pdf}
     \caption{number scripts to stars with the extreme values cropped out. As we are comparing stars along the x axis it looks similar too Figure \ref{graph_scatter_stars_vs_subs}. This figure focuses focused on the first 20,000 stars as that is where the data is most dense. We found a slight increase in usage of scripts the more popular a project became. Yet this is only a correlation and further research would need to be done to work out if their is a causation}
     \label{fig:script_scatter_lines2}
   \end{minipage}
