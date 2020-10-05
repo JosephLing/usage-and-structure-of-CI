@@ -68,7 +68,7 @@ GITHUB_TOKEN = getenv("GITHUB_TOKEN")
 # subscribers count is used to demonstrate the number of people watching the repository. Watchers etc. is now for
 # the star count.
 REPO_KEYS = ["name", "id", "description", "language", "open_issues",
-             "stargazers_count", "topics",
+             "stargazers_count",
              "subscribers_count", "fork", "forks_url"]
 
 FIELDS = REPO_KEYS[:]
@@ -92,7 +92,7 @@ def check_for_empty_repo(repo, path, count=0):
     try:
         return repo.get_contents(path)
     except GithubException as e:
-        if e.status == 404 and e.data.get("message") is not None and "This repository is empty." in e.data["message"]:
+        if e.status in [404, 409] and e.data.get("message") is not None and "This repository is empty." in e.data["message"]:
             raise EmptyRepository()
         elif e.status >= 500 and e.status < 600 and count < 5:
             # note: this will cause a horrible stacktrace error
@@ -110,16 +110,23 @@ def get_commits_info(repo):
     """
     dictionary = {}
     commits = repo.get_commits()
-    dictionary["commits"] = commits.totalCount
-    if commits.totalCount >= 3:
+    try:
+        dictionary["commits"] = commits.totalCount
+    except GithubException as e:
+        if e.status in [404,409] and e.data.get("message") and "Git Repository is empty" in e.data.get("message"):
+            dictionary["commits"] = 0
+        else:
+            raise e
+
+    if dictionary["commits"] >= 3:
         dictionary["recent_commit1"] = commits[0].commit.committer.date
         dictionary["recent_commit2"] = commits[1].commit.committer.date
         dictionary["recent_commit3"] = commits[2].commit.committer.date
-    elif commits.totalCount == 2:
+    elif dictionary["commits"] == 2:
         dictionary["recent_commit1"] = commits[0].commit.committer.date
         dictionary["recent_commit2"] = commits[1].commit.committer.date
         dictionary["recent_commit3"] = 0
-    elif commits.totalCount == 1:
+    elif dictionary["commits"] == 1:
         dictionary["recent_commit1"] = commits[0].commit.committer.date
         dictionary["recent_commit2"] = 0
         dictionary["recent_commit3"] = 0
@@ -198,7 +205,7 @@ def get_yaml_from_directory(repo, path):
     returns an array of up too NUMBER_OF_POTENTIAL_FILES that match the search criteria and are yaml
     """
     try:
-        temp = repo.get_contents(path)
+        temp = check_for_empty_repo(repo, path)
         if isinstance(temp, list):
             # we slice here to avoid having extra files of configuration over 24
             # 24 atm is just a magic number as we should ideally never get above that
