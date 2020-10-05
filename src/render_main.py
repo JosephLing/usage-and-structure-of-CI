@@ -109,6 +109,21 @@ def spread_of_data_line_star(data, sorted_data):
         stars[int(line.get("id"))] = (int(line.get("stars")), 1)
     return create_percentage_bar_graphs(list(stars.values()), "percentage of stars that use CI", "stars")
 
+def ci_usage_against_commits(data, sorted_data):
+    stars = {}
+    for line in data:
+        if line.get("commits") == "":
+            stars[int(line.get("id"))] = (0, 0)
+        else:
+            stars[int(line.get("id"))] = (int(line.get("commits")), 0)
+
+    for line in sorted_data:
+        if line.get("commits") == "":
+            stars[int(line.get("id"))] = (0, 1)
+        else:
+            stars[int(line.get("id"))] = (int(line.get("commits")), 1)
+    return create_percentage_bar_graphs(list(stars.values()), "percentage of stars that use CI", "stars")
+
 
 def spread_of_data_line_sub(data, sorted_data):
     stars = {}
@@ -373,7 +388,8 @@ def languages_table_topn(name, n, data, sorted_data):
     c = data["language"].value_counts
     # data.index.size - data["id"].value_counts().apply(lambda x: x if x == 1 else 0).sum()
 
-    c2 = sorted_data["lang"].value_counts
+    # c2 = sorted_data["lang"].value_counts
+    c2 = sorted_data.groupby("lang")["id"].nunique
     frames = {"total count": c(), "using CI": c2(), "percentage CI": c2() / c() * 100}
     df = pd.DataFrame(frames)
     # df["percentage CI"] = df["percentage CI"].apply(lambda x: x if x <=100 else -100)
@@ -669,7 +685,6 @@ def main(experimenting, name1, name2, image_encoding, output="."):
         # spread_of_data_v2(data, sorted_data).show()
         # plt.clf()
         # spread_of_data_line_sub(data, sorted_data).show()
-        sorted_data = load_dataframe(name2)
         # save_as_pdf(language_type(load_dataframe(name1), sorted_data), f"{output}/languages", image_encoding)
         # languages_table_topn(f"{output}/languages table.tex", 20, load_dataframe(name1), sorted_data)
         # langs = languages_table_topn(f"{output}/languages table.tex", 30, load_dataframe(name1), sorted_data)
@@ -707,8 +722,16 @@ def main(experimenting, name1, name2, image_encoding, output="."):
         # scripts_latex(f"{output}/scripts table new.tex", sorted_data)
         # save_as_pdf(script_usage(sorted_data), f"{output}/scripts usage bars", image_encoding)
 
-        save_as_pdf(lines_against_scripts(sorted_data[sorted_data["yaml"]]), f"{output}/scripts vs lines", image_encoding)
-        save_as_pdf(stars_against_lines(sorted_data), f"{output}/scripts vs stars", image_encoding)
+        # save_as_pdf(lines_against_scripts(sorted_data[sorted_data["yaml"]]), f"{output}/scripts vs lines", image_encoding)
+        # save_as_pdf(stars_against_lines(sorted_data), f"{output}/scripts vs stars", image_encoding)
+        sorted_data = load_dataframe(name2)
+
+        # save_as_pdf(ci_usage_against_commits(data, sorted_data), f"{output}/cats", image_encoding)
+
+        # RQ3
+        langs = languages_table_topn(f"{output}/2019 languages table.tex", 30, load_dataframe(name1), sorted_data)
+        save_as_pdf(popularity_vs_percentage_CI_scatter(langs, sorted_data), f"{output}/2019-languages-scatter-CI",
+                    image_encoding)
 
     else:
         data = csvReader.readfile(name1)
@@ -768,6 +791,7 @@ def main(experimenting, name1, name2, image_encoding, output="."):
 
 
 if __name__ == '__main__':
-    data = main(True, "combined9.csv", "yaml threaded19.csv", "pdf", "./results")
+    # data = main(True, "2019 combined.csv", "2019 yaml threaded.csv", "pdf", "./results")
+    data = main(False, "2020 combined.csv", "2020 yaml threaded1.csv", "pdf", "./results")
     # data = main(False, "combined9.csv", "yaml threaded14.csv", "svg", "./results")
     # main(True, "combined1.csv", "yaml threaded6.csv", "svg", "./results")

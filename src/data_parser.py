@@ -25,7 +25,7 @@ FILTERS = {
 FIELDS = [*FILTERS.keys(), "comments", "blank_lines", "code", "config", "lang", "yaml_encoding_error",
           "code_with_comments",
           "stars", "sub", "data", "id", "single_line_comment", "config_name", "multi_line_comment_unique",
-          "multi_line_comment", "file_lines", "yaml", "bash", "powershell"]
+          "multi_line_comment", "file_lines", "yaml", "bash", "powershell", "commits"]
 
 dtypes = {**{"comments": int, "blank_lines": int, "code": int, "config": str,
              "lang": str,
@@ -286,6 +286,7 @@ def process_yaml_files(config_data, config_name, line, config_type):
             "yaml_encoding_error": get_yaml_encoding_error(fileasstring),
             "lang": remove_byte_string(line.get("language")),
             "stars": line["stargazers_count"],
+            "commmits": line["commits"],
             "sub": line.get("subscribers_count"),
             "data": config_data,
             "yaml": True,
@@ -376,7 +377,7 @@ def process_line(line, name):
         temp = check_readme(line.get("readme"))
         if temp:
             results.append(temp)
-            print("{} {} {}".format(line.get("name"), line.get("stargazers_count"), line.get("subscribers_count")))
+            # print("{} {} {}".format(line.get("name"), line.get("stargazers_count"), line.get("subscribers_count")))
 
     if len(yaml_stats) != 0:
         temp = check_readme(line.get("readme"))
@@ -493,7 +494,7 @@ def main(name, data, output_for_latex):
 
 
 if __name__ == '__main__':
-    main("yaml threaded", csvReader.readfile("combined9.csv"), "./results")
+    main("2020 yaml threaded", csvReader.readfile("2020 combined.csv"), "./results")
     print(len(results))
     print(len(results_ci))
     print(no_readme)

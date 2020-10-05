@@ -25,6 +25,19 @@
 {}{}
 \makeatother
 
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+
+% Define block styles
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+    text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+    text width=5em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+    minimum height=2em]
+
+
 % \usepackage{lineno}
 % \linenumbers
 % \definecolor{periwinkle}{rgb}{0.8, 0.8, 1.0}
@@ -165,6 +178,17 @@ In order to answer the research questions we needed to find projects for CI conf
 We chose to use a config file to specify which CI systems configuration files we would look for. If it was a directory then it would get all \enquote{.yaml} or \enquote{.yml} along with any Teamcity \enquote{.kts} and \enquote{.xml} files. However the script did not look into any of the sub directories which might be the cause for the low number of Teamcity configuration files found. In the case that it was a file that was on the top level directory we matched it with the lowercase file name we found against the query.
 
 In terms of which configuration files to pick we based our list from Github Welcomes all CI Tools blog post in 2017 \cite{Github2017}. In addition we added Github Actions and Azure Pipelines to the list as they are new and potentially popular systems. 
+
+
+\begin{tikzpicture}[node distance = 2cm, auto]
+  % Place nodes
+  \node [block] (init) {query: stars:0..100};
+  \node [block, right of=init] (repos) {repositories (paginated results)};
+  \node [block, right of=repos] (repo) {single repository};
+  % Draw edges
+  \path [line] (init) -- (repos);
+  \path [line] (repos) -- (repo);
+\end{tikzpicture}
 
 \begin{figure}[!t]
   \centering
