@@ -14,7 +14,7 @@ import pandas as pd
 import numpy as np
 
 import render_sankey_diagram
-from data_parser import dtypes, format_as_percentage
+from data_parser import dtypes, format_as_percentage, dates, remove_byte_string
 from numpy.polynomial.polynomial import polyfit
 
 
@@ -42,7 +42,8 @@ def lines_against_scripts(data):
     x = data["code"]
     y = data["scripts"]
     b, m = polyfit(x, y, 1)
-    plot.plot(x, b + m * x, '-', color="red", alpha=0.25, scalex=False, scaley=False)
+    plot.plot(x, b + m * x, '-', color="red",
+              alpha=0.25, scalex=False, scaley=False)
     # plot.plot(np.array(range(x.max())), np.array(range(x.max())), '-', color="green", alpha=0.25)
 
     plot.scatter(x, y, s=0.5, alpha=0.5)
@@ -61,7 +62,8 @@ def stars_against_lines(data):
     x = data["stars"]
     y = data["scripts"]
     b, m = polyfit(x, y, 1)
-    plot.plot(x, b + m * x, '-', color="red", alpha=0.25, scalex=False, scaley=False)
+    plot.plot(x, b + m * x, '-', color="red",
+              alpha=0.25, scalex=False, scaley=False)
     # plot.plot(np.array(range(x.max())), np.array(range(x.max())), '-', color="green", alpha=0.25)
     plot.scatter(x, y, s=0.5, alpha=0.5)
     plot.ylim(0, 50)
@@ -108,6 +110,7 @@ def spread_of_data_line_star(data, sorted_data):
     for line in sorted_data:
         stars[int(line.get("id"))] = (int(line.get("stars")), 1)
     return create_percentage_bar_graphs(list(stars.values()), "percentage of stars that use CI", "stars")
+
 
 def ci_usage_against_commits(data, sorted_data):
     stars = {}
@@ -246,7 +249,7 @@ def boxplot_stars(plot, data):
 
 
 def load_dataframe(name):
-    return pd.read_csv(name, dtype=dtypes)
+    return pd.read_csv(name, dtype=dtypes, parse_dates=dates)
 
 
 def _value_counts_bar_graph(plot, data):
@@ -280,14 +283,16 @@ def scripts_latex(name, sorted_data):
 
     df = sorted_data.groupby("config")[
         ["bash", "powershell"]].sum()
-    df = df.join(sorted_data.groupby("config").size().rename("number of config"))
-    df = df.join((format_as_percentage(df["bash"] / df["number of config"] * 100)).rename("percentage bash"))
-    df = df.join((format_as_percentage(df["powershell"] / df["number of config"] * 100)).rename("percentage powershell"))
+    df = df.join(sorted_data.groupby(
+        "config").size().rename("number of config"))
+    df = df.join((format_as_percentage(
+        df["bash"] / df["number of config"] * 100)).rename("percentage bash"))
+    df = df.join((format_as_percentage(
+        df["powershell"] / df["number of config"] * 100)).rename("percentage powershell"))
     # frames.append({"no. config": })
     #
     # frames.append({"perc bash": frames[0]["bash"] / frames[1]["no. config"] * 100})
     # frames.append({"perc power": frames[0]["powershell"] / frames[1]["no. config"] * 100})
-
 
     with open(name, 'w') as tf:
         s = df.to_latex(caption="sum of scripts used", label="table:scripts used",
@@ -303,7 +308,8 @@ def scripts_latex(name, sorted_data):
 
 
 def yaml_config_errors_to_latex(name, dataset):
-    df = dataset.groupby(['config', 'yaml_encoding_error']).size().unstack(fill_value=0)
+    df = dataset.groupby(['config', 'yaml_encoding_error']
+                         ).size().unstack(fill_value=0)
     thing = dataset[dataset["yaml"]]["config"].value_counts()
     defaults = dict([(k, 0) for k in thing.index if k not in df.index])
     df2 = pd.DataFrame({"composer error": defaults, "constructor error": defaults, "parse error": defaults,
@@ -383,14 +389,17 @@ def popularity_vs_percentage_CI_scatter(df, data):
 
 
 def languages_table_topn(name, n, data, sorted_data):
-    data["language"] = data["language"].apply(lambda x: x[2:-1] if isinstance(x, str) and x.startswith("b'") else x)
-    data["language"] = data["language"].apply(lambda x: x[2:-1] if isinstance(x, str) and x.startswith('b"') else x)
+    data["language"] = data["language"].apply(
+        lambda x: x[2:-1] if isinstance(x, str) and x.startswith("b'") else x)
+    data["language"] = data["language"].apply(
+        lambda x: x[2:-1] if isinstance(x, str) and x.startswith('b"') else x)
     c = data["language"].value_counts
     # data.index.size - data["id"].value_counts().apply(lambda x: x if x == 1 else 0).sum()
 
     # c2 = sorted_data["lang"].value_counts
     c2 = sorted_data.groupby("lang")["id"].nunique
-    frames = {"total count": c(), "using CI": c2(), "percentage CI": c2() / c() * 100}
+    frames = {"total count": c(), "using CI": c2(),
+              "percentage CI": c2() / c() * 100}
     df = pd.DataFrame(frames)
     # df["percentage CI"] = df["percentage CI"].apply(lambda x: x if x <=100 else -100)
     df["percentage CI"] = format_as_percentage(df["percentage CI"])
@@ -451,7 +460,8 @@ def language_type(data, sorted_data):
     df = pd.read_json("langs.json", orient="index").T
     # the T flips the axis so that we get keys for columns and values for the index and we need to do this as the
     # value arrays aren't of equal length
-    data["language"] = data["language"].apply(lambda x: x[2:-1] if isinstance(x, str) else x)
+    data["language"] = data["language"].apply(
+        lambda x: x[2:-1] if isinstance(x, str) else x)
     rects1 = _lang(ax, df, data, "language", 1)
     rects2 = _lang(ax, df, sorted_data, "lang", 2)
 
@@ -508,7 +518,8 @@ def line_usage_configuration(data, only_comments=False):
     barWidth = 0.25
     if only_comments:
         data = data[data["comments"] > 0]
-    df = data.groupby("config")[["blank_lines", "comments", "code", "file_lines"]].mean()
+    df = data.groupby("config")[
+        ["blank_lines", "comments", "code", "file_lines"]].mean()
 
     bars = []
     for config in df.columns:
@@ -521,10 +532,14 @@ def line_usage_configuration(data, only_comments=False):
     r4 = [x + barWidth for x in r3]
 
     # Make the plot
-    plt.bar(r1, bars[0], color='#7f6d5f', width=barWidth, edgecolor='white', label='blank lines')
-    plt.bar(r2, bars[1], color='#557f2d', width=barWidth, edgecolor='white', label='comments')
-    plt.bar(r3, bars[2], color='blue', width=barWidth, edgecolor='white', label='code')
-    plt.bar(r4, bars[3], color='red', width=barWidth, edgecolor='white', label='file lines')
+    plt.bar(r1, bars[0], color='#7f6d5f', width=barWidth,
+            edgecolor='white', label='blank lines')
+    plt.bar(r2, bars[1], color='#557f2d', width=barWidth,
+            edgecolor='white', label='comments')
+    plt.bar(r3, bars[2], color='blue', width=barWidth,
+            edgecolor='white', label='code')
+    plt.bar(r4, bars[3], color='red', width=barWidth,
+            edgecolor='white', label='file lines')
 
     # Add xticks on the middle of the group bars
     plt.ylabel("mean number of lines", fontweight='bold')
@@ -541,7 +556,8 @@ def line_usage_configuration2(data, only_comments=False):
     barWidth = 0.25
     if only_comments:
         data = data[data["comments"] > 0]
-    df = data.groupby("config")[["comments", "code_with_comments", "single_line_comment", "multi_line_comment"]].mean()
+    df = data.groupby("config")[["comments", "code_with_comments",
+                                 "single_line_comment", "multi_line_comment"]].mean()
 
     bars = []
     for config in df.columns:
@@ -554,10 +570,14 @@ def line_usage_configuration2(data, only_comments=False):
     r4 = [x + barWidth for x in r3]
 
     # Make the plot
-    plt.bar(r1, bars[0], color='#7f6d5f', width=barWidth, edgecolor='white', label='comments')
-    plt.bar(r2, bars[1], color='blue', width=barWidth, edgecolor='white', label='code with comments')
-    plt.bar(r3, bars[2], color='red', width=barWidth, edgecolor='white', label='single line comment')
-    plt.bar(r4, bars[3], color='#2d7f5e', width=barWidth, edgecolor='white', label='multi line comment')
+    plt.bar(r1, bars[0], color='#7f6d5f', width=barWidth,
+            edgecolor='white', label='comments')
+    plt.bar(r2, bars[1], color='blue', width=barWidth,
+            edgecolor='white', label='code with comments')
+    plt.bar(r3, bars[2], color='red', width=barWidth,
+            edgecolor='white', label='single line comment')
+    plt.bar(r4, bars[3], color='#2d7f5e', width=barWidth,
+            edgecolor='white', label='multi line comment')
 
     # Add xticks on the middle of the group bars
     plt.ylabel("mean number of lines", fontweight='bold')
@@ -573,7 +593,8 @@ def comment_usage(data):
     # set width of bar
     barWidth = 0.25
 
-    df = data[data["comments"] > 0].groupby("config")[["version", "http", "header", "important", "todo"]].mean()
+    df = data[data["comments"] > 0].groupby(
+        "config")[["version", "http", "header", "important", "todo"]].mean()
     print(df)
     # set height of bar
     # bars1 = [12, 30, 1, 8, 22]
@@ -592,11 +613,16 @@ def comment_usage(data):
     r5 = [x + barWidth for x in r4]
 
     # Make the plot
-    plt.bar(r1, bars[0], color='#7f6d5f', width=barWidth, edgecolor='white', label=df.columns[0])
-    plt.bar(r2, bars[1], color='#557f2d', width=barWidth, edgecolor='white', label=df.columns[1])
-    plt.bar(r3, bars[2], color='blue', width=barWidth, edgecolor='white', label=df.columns[2])
-    plt.bar(r4, bars[3], color='red', width=barWidth, edgecolor='white', label=df.columns[3])
-    plt.bar(r5, bars[4], color='#2d7f5e', width=barWidth, edgecolor='white', label=df.columns[4])
+    plt.bar(r1, bars[0], color='#7f6d5f', width=barWidth,
+            edgecolor='white', label=df.columns[0])
+    plt.bar(r2, bars[1], color='#557f2d', width=barWidth,
+            edgecolor='white', label=df.columns[1])
+    plt.bar(r3, bars[2], color='blue', width=barWidth,
+            edgecolor='white', label=df.columns[2])
+    plt.bar(r4, bars[3], color='red', width=barWidth,
+            edgecolor='white', label=df.columns[3])
+    plt.bar(r5, bars[4], color='#2d7f5e', width=barWidth,
+            edgecolor='white', label=df.columns[4])
 
     # Add xticks on the middle of the group bars
     plt.ylabel("average")
@@ -612,7 +638,8 @@ def script_usage(data):
     # set width of bar
     barWidth = 0.25
 
-    df = data[(data["powershell"] > 0) | (data["bash"] > 0)].groupby("config")[["bash", "powershell"]].mean()
+    df = data[(data["powershell"] > 0) | (data["bash"] > 0)].groupby(
+        "config")[["bash", "powershell"]].mean()
     df2 = data.groupby("config")[["bash", "powershell"]].mean()
     bars = []
     # bars2 = []
@@ -626,8 +653,10 @@ def script_usage(data):
     r2 = [x + barWidth for x in r1]
 
     # Make the plot
-    plt.bar(r1, bars[0], color='#7f6d5f', width=barWidth, edgecolor='white', label=df2.columns[0])
-    plt.bar(r2, bars[1], color='#557f2d', width=barWidth, edgecolor='white', label=df2.columns[1])
+    plt.bar(r1, bars[0], color='#7f6d5f', width=barWidth,
+            edgecolor='white', label=df2.columns[0])
+    plt.bar(r2, bars[1], color='#557f2d', width=barWidth,
+            edgecolor='white', label=df2.columns[1])
 
     # plt.bar(r1, bars2[0], color='red', width=barWidth, edgecolor='white', label="a")
     # plt.bar(r2, bars2[1], color='blue', width=barWidth, edgecolor='white', label="b")
@@ -655,8 +684,10 @@ def code_with_comments(data, xcol, ycol, cat="config"):
         y = git[ycol]
         axs[p].scatter(x, y, 0.5)
         b, m = polyfit(x, y, 1)
-        axs[p].plot(x, b + m * x, '-', color="red", alpha=0.25, scalex=False, scaley=False)
-        axs[p].plot(np.array(range(x.max())), np.array(range(x.max())), '-', color="green", alpha=0.25)
+        axs[p].plot(x, b + m * x, '-', color="red",
+                    alpha=0.25, scalex=False, scaley=False)
+        axs[p].plot(np.array(range(x.max())), np.array(
+            range(x.max())), '-', color="green", alpha=0.25)
         axs[p].set_title("{} (sample: {})".format(c, len(git)), fontsize=6)
         # axs[p].set_ylim(-1, 1200)
         # axs[p].set_xlim(0, 7000)
@@ -676,6 +707,49 @@ def code_with_comments(data, xcol, ycol, cat="config"):
 
     plt.show()
     pass
+
+
+def get_last_timeframe(sorted_data, key, search):
+    temp = sorted_data[(sorted_data[key] != "0") & (sorted_data[key] != 0)]
+    temp[key] = pd.to_datetime(temp[key])
+    temp = temp.sort_values(by=key, ascending=True).set_index(key)
+    return temp.last(search)
+
+
+def comparison(data, col, val, old_data=False):
+    if col is None:
+        return data
+
+    if val is None:
+        return data
+
+    if isinstance(val, str) and old_data:
+        return data[data[col] == "b'{}'".format(val)]
+
+    return data[data[col] == val]
+
+
+def get_last_years_ci_usage(sorted_data, data, col=None, col2=None, val=None):
+    print("Searching for the last 5 years for {} {}".format(
+        val, len(comparison(data, col2, val, True))))
+    ci = 0
+    total = 0
+    for i in range(6, 5*12, 6):
+        temp_ci = comparison(get_last_timeframe(
+            sorted_data, "commit_1", "{}M".format(i)), col, val)["id"].nunique() - ci
+        temp_total = len(comparison(get_last_timeframe(
+            data, "recent_commit1", "{}M".format(i)), col2, val, True)) - total
+        ci += temp_ci
+        total += temp_total
+        if temp_total > 0:
+            print("month: {} total: {} ci: {} perc: {}".format(
+                i, temp_total, temp_ci, temp_ci/temp_total*100))
+        else:
+            print("month: {} no data")
+    ci = comparison(sorted_data, col, val)["id"].nunique() - ci
+    total = len(comparison(data, col2, val, True)) - total
+    print("total: {} ci: {} perc: {} (older than 5 years)".format(
+        total, ci, ci/total*100))
 
 
 def main(experimenting, name1, name2, image_encoding, output="."):
@@ -725,44 +799,80 @@ def main(experimenting, name1, name2, image_encoding, output="."):
         # save_as_pdf(lines_against_scripts(sorted_data[sorted_data["yaml"]]), f"{output}/scripts vs lines", image_encoding)
         # save_as_pdf(stars_against_lines(sorted_data), f"{output}/scripts vs stars", image_encoding)
         sorted_data = load_dataframe(name2)
+        data = pd.read_csv("2020 combined.csv", dtype={"id": int, "language": str}, parse_dates=[
+                           "recent_commit1", "recent_commit2", "recent_commit3"])
+        # get_last_years_ci_usage(sorted_data, data, None, None)
+        # get_last_years_ci_usage(sorted_data, data, "lang","language", "Rust")
+        # get_last_years_ci_usage(sorted_data, data, "lang","language", "JavaScript")
+        # get_last_years_ci_usage(sorted_data, data, "lang","language", "Go")
+        # get_last_years_ci_usage(sorted_data, data, "lang","language", "Python")
+        # get_last_years_ci_usage(sorted_data, data, "lang","language", "C++")
+        # get_last_years_ci_usage(sorted_data, data, "lang","language", "Java")
 
-        # save_as_pdf(ci_usage_against_commits(data, sorted_data), f"{output}/cats", image_encoding)
+        get_last_years_ci_usage(sorted_data, data, "lang", "language")
 
-        # RQ3
-        langs = languages_table_topn(f"{output}/2019 languages table.tex", 30, load_dataframe(name1), sorted_data)
-        save_as_pdf(popularity_vs_percentage_CI_scatter(langs, sorted_data), f"{output}/2019-languages-scatter-CI",
-                    image_encoding)
+        # recent_commit1 = get_last_timeframe(data, "recent_commit1", "12M")
+
+        # print("There are {} repositories that had their last commit in the last year. This is {} percentage of the total sample size.".format(len(recent_commit1), len(recent_commit1)/len(data)*100))
+        # print("Out of all the last commits {} had CI".format(len(commit1)/len(recent_commit1)*100))
+
+        # ci_two_years = len(get_last_timeframe(sorted_data, "commit_1", "2Y")) - len(commit1)
+        # total_two_years = len(get_last_timeframe(data, "recent_commit1", "2Y")) - len(recent_commit1)
+
+        # print("Out of all the last commits {} had CI".format(ci_two_years/total_two_years*100))
+
+        # # # save_as_pdf(ci_usage_against_commits(data, sorted_data), f"{output}/cats", image_encoding)
+
+        # # RQ3
+        # langs = languages_table_topn(f"{output}/2019 languages table.tex", 30, load_dataframe(name1), sorted_data)
+        # save_as_pdf(popularity_vs_percentage_CI_scatter(langs, sorted_data), f"{output}/2019-languages-scatter-CI",
+        #             image_encoding)
 
     else:
         data = csvReader.readfile(name1)
         # #
-        save_as_pdf(spread_of_data_sub_to_stars(data), f"{output}/sub vs stars", image_encoding)
-        save_as_pdf(spread_over_time_stars(data), f"{output}/spread over time", image_encoding)
-        save_as_pdf(spread_data_issues_vs_stars(data), f"{output}/issues vs stars", image_encoding)
+        save_as_pdf(spread_of_data_sub_to_stars(data),
+                    f"{output}/sub vs stars", image_encoding)
+        save_as_pdf(spread_over_time_stars(data),
+                    f"{output}/spread over time", image_encoding)
+        save_as_pdf(spread_data_issues_vs_stars(data),
+                    f"{output}/issues vs stars", image_encoding)
 
         sorted_data = load_dataframe(name2)
-        yaml_config_errors_to_latex(f"{output}/yaml config errors.tex", sorted_data)
+        yaml_config_errors_to_latex(
+            f"{output}/yaml config errors.tex", sorted_data)
         # should not need to rerun this unless more scraping is done!!!
         # commented out as manual edits to the formatting are easier than code ones atm
         # config_type_split(f"{output}/configuration type count.tex", sorted_data)
 
-        save_as_pdf(config_topn(sorted_data, 20), f"{output}/config-topn", image_encoding)
+        save_as_pdf(config_topn(sorted_data, 20),
+                    f"{output}/config-topn", image_encoding)
 
         # RQ3
-        langs = languages_table_topn(f"{output}/languages table.tex", 30, load_dataframe(name1), sorted_data)
+        langs = languages_table_topn(
+            f"{output}/languages table.tex",
+            30,
+            pd.read_csv(name1,
+                        dtype=dtypes,
+                        parse_dates=["recent_commit1", "recent_commit2", "recent_commit3"]),
+            sorted_data)
         save_as_pdf(popularity_vs_percentage_CI_scatter(langs, sorted_data), f"{output}/languages-scatter-CI",
                     image_encoding)
 
-        save_as_pdf(langues_topn(sorted_data, 50), f"{output}/languages-topn", image_encoding)
+        save_as_pdf(langues_topn(sorted_data, 30),
+                    f"{output}/languages-topn", image_encoding)
 
-        save_as_pdf(language_type(load_dataframe(name1), sorted_data), f"{output}/languages", image_encoding)
+        save_as_pdf(language_type(pd.read_csv(name1, dtype=dtypes,parse_dates=[ "recent_commit1", "recent_commit2", "recent_commit3"]), sorted_data), f"{output}/languages", image_encoding)
 
+        # --------------
         sorted_data_csv = csvReader.readfile(name2)
         save_as_pdf(spread_of_data_line_star(data, sorted_data_csv), f"{output}/percentage stars with CI",
                     image_encoding)
-        save_as_pdf(spread_of_data_line_sub(data, sorted_data_csv), f"{output}/percentage sub with CI", image_encoding)
+        save_as_pdf(spread_of_data_line_sub(data, sorted_data_csv),
+                    f"{output}/percentage sub with CI", image_encoding)
         save_as_pdf(spread_of_data_line_star_other_paper(), f"{output}/percentage sub with CI other paper source",
                     image_encoding)
+
         # render_sankey_diagram.save_sanky_daigram_for_errors_and_comments(f"./{output}/sankey",
         #                                                                  pd.read_csv(name2, dtype=dtypes), False, False,
         #                                                                  image_encoding)
@@ -772,7 +882,8 @@ def main(experimenting, name1, name2, image_encoding, output="."):
         # render_sankey_diagram.save_sanky_daigram_for_errors_and_comments(f"./{output}/sankey3",
         #                                                                  pd.read_csv(name2, dtype=dtypes), True, False,
 
-        save_as_pdf(line_usage_configuration(sorted_data), f"{output}/line structure all", image_encoding)
+        save_as_pdf(line_usage_configuration(sorted_data),
+                    f"{output}/line structure all", image_encoding)
         save_as_pdf(line_usage_configuration(sorted_data[sorted_data["yaml"]]), f"{output}/line structure yaml",
                     image_encoding)
         save_as_pdf(line_usage_configuration2(sorted_data[sorted_data["yaml"]]),
@@ -780,18 +891,23 @@ def main(experimenting, name1, name2, image_encoding, output="."):
         save_as_pdf(line_usage_configuration2(sorted_data[sorted_data["yaml"] == False]),
                     f"{output}/line structure none yaml comments", image_encoding)
 
-        save_as_pdf(comment_usage(sorted_data), f"{output}/comments usage bars", image_encoding)
+        save_as_pdf(comment_usage(sorted_data),
+                    f"{output}/comments usage bars", image_encoding)
 
-        save_as_pdf(script_usage(sorted_data), f"{output}/scripts usage bars", image_encoding)
+        save_as_pdf(script_usage(sorted_data),
+                    f"{output}/scripts usage bars", image_encoding)
         scripts_latex(f"{output}/scripts table new.tex", sorted_data)
-        save_as_pdf(lines_against_scripts(sorted_data), f"{output}/scripts vs lines", image_encoding)
-        save_as_pdf(stars_against_lines(sorted_data), f"{output}/scripts vs stars", image_encoding)
+        save_as_pdf(lines_against_scripts(sorted_data),
+                    f"{output}/scripts vs lines", image_encoding)
+        save_as_pdf(stars_against_lines(sorted_data),
+                    f"{output}/scripts vs stars", image_encoding)
 
     return sorted_data
 
 
 if __name__ == '__main__':
     # data = main(True, "2019 combined.csv", "2019 yaml threaded.csv", "pdf", "./results")
-    data = main(False, "2020 combined.csv", "2020 yaml threaded1.csv", "pdf", "./results")
+    data = main(False, "2020 combined.csv",
+                "2020 yaml threaded5.csv", "pdf", "./results")
     # data = main(False, "combined9.csv", "yaml threaded14.csv", "svg", "./results")
     # main(True, "combined1.csv", "yaml threaded6.csv", "svg", "./results")

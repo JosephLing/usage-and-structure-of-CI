@@ -7,6 +7,7 @@ import csv
 import threading
 import queue
 from scraper import NUMBER_OF_POTENTAIL_FILES
+import numpy as np
 
 FILTERS = {
     "todo": {"data": [], "search": "todo"},
@@ -25,14 +26,17 @@ FILTERS = {
 FIELDS = [*FILTERS.keys(), "comments", "blank_lines", "code", "config", "lang", "yaml_encoding_error",
           "code_with_comments",
           "stars", "sub", "data", "id", "single_line_comment", "config_name", "multi_line_comment_unique",
-          "multi_line_comment", "file_lines", "yaml", "bash", "powershell", "commits"]
+          "multi_line_comment", "file_lines", "yaml", "bash", "powershell", "commits", "commit_1", "commit_2", "commit_3"]
+
+dates = ["commit_1","commit_2","commit_3"]
 
 dtypes = {**{"comments": int, "blank_lines": int, "code": int, "config": str,
              "lang": str,
              "yaml_encoding_error": str, "code_with_comments": int, "stars": int,
              "sub": int, "data": str, "id": int, "single_line_comment": int, "config_name": str,
              "multi_line_comment_unique": int, "multi_line_comment": int, "file_lines": int, "yaml": bool},
-          **dict([(k, int) for k in FILTERS.keys()])}
+          **dict([(k, int) for k in FILTERS.keys() if k not in dates])}
+
 
 global_lock = threading.Lock()
 
@@ -270,31 +274,6 @@ def get_yaml_encoding_error(fileasstring):
     return yaml_encoding_error
 
 
-def process_yaml_files(config_data, config_name, line, config_type):
-    """
-    :param config_data str: hash of the config
-    :param config_name str: filename of that config
-    :param line dictionary: all the data for that line
-    :param config_type str: the type of configuration this config belongs too
-    :returns dictionary: of values to be saved:
-    """
-    fileasstring = lib.base64Decode(config_data)
-    if fileasstring:
-        return {**{
-            "config": remove_byte_string(config_type),
-            "config_name": remove_byte_string(config_name),
-            "yaml_encoding_error": get_yaml_encoding_error(fileasstring),
-            "lang": remove_byte_string(line.get("language")),
-            "stars": line["stargazers_count"],
-            "commmits": line["commits"],
-            "sub": line.get("subscribers_count"),
-            "data": config_data,
-            "yaml": True,
-            "id": line.get("id")}, **get_comment_stats(fileasstring, yaml_thing)}
-    else:
-        print("error")
-
-
 def process_config(config_data, config_type, config_name, line, is_yaml):
     # TODO: for teamcity config should we try and parse all of it for comments???
     # as we going to ignore it in later stages as well
@@ -313,6 +292,10 @@ def process_config(config_data, config_type, config_name, line, is_yaml):
             "lang": remove_byte_string(line.get("language")),
             "stars": line["stargazers_count"],
             "sub": line.get("subscribers_count"),
+            "commits": line.get("commits"),
+            "commit_1": line.get("recent_commit1"),
+            "commit_2": line.get("recent_commit2"),
+            "commit_3": line.get("recent_commit3"),
             "data": config_data,
             "yaml_encoding_error": get_yaml_encoding_error(fileasstring) if is_yaml else "",
             "yaml": is_yaml,
@@ -473,7 +456,7 @@ def main(name, data, output_for_latex):
     """
     sets up the files to write the
     """
-    num_worker_threads = 1
+    num_worker_threads = 2
 
     name = csvReader.check_name(name, limit=20)
 
