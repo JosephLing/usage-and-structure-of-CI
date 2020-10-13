@@ -9,7 +9,7 @@
 
 \RequirePackage{ifthen}
 \RequirePackage[normalem]{ulem} % for \sout
-\RequirePackage[svgnames]{xcolor}
+\RequirePackage{xcolor}
 \RequirePackage{xspace}
 
 \newboolean{showedits}
@@ -81,7 +81,7 @@
 
 \makeatletter
 %% LNCS already has a \note macro
-\@ifundefined{note}{%
+\@ifundefined{todo}{%
 \newcommand\todo[1]{\nb{TODO}{#1}}%
 }{}
 \@ifundefined{note}{%
