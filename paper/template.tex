@@ -94,9 +94,9 @@ email address or ORCID}
 \section{Introduction}
 \label{Introduction}
 
-Continuos integration (CI) is becoming more popular over the last few years. This can be seen by how major version control hosting services GitHub, Bitbucket and Gitlab have all released CI products or have been improving their CI products. In terms of research, Infrastructure as Code in \citet{Rahman2019} which does a systematic mapping of research in that area. For Continuous Integration with \citet{Shahin2017} which does another systematic review on how it is used. These two papers demonstrate some of breadth of research that has taken place. In addition you have papers like Google's Innovation Factory: Testing, Culture, and Infrastructure \citet{Copeland2010} which demonstrate some of the depth that the papers go into.
+Continuous integration (CI) is becoming more popular over the last few years. This can be seen by how major version control hosting services GitHub, Bitbucket and Gitlab have all released CI products or have been improving their CI products. In terms of research, Infrastructure as Code in \citet{Rahman2019} which does a systematic mapping of research in that area. For Continuous Integration with \citet{Shahin2017} which does another systematic review on how it is used. These two papers demonstrate some of breadth of research that has taken place. In addition you have papers like Google's Innovation Factory: Testing, Culture, and Infrastructure \citet{Copeland2010} which demonstrate some of the depth that the papers go into.
 
-Continuos Integration is a process of automatically compiling, running tests and checking that the product works. This is can be combined with Continuos Delivery where the product is deployed or released after it has gone through successfully CI. 
+Continuous Integration is a process of automatically compiling, running tests and checking that the product works. This is can be combined with Continuous Delivery where the product is deployed or released after it has gone through successfully CI. 
 
 This can get complicated quickly therefore Configuration as Code (or Infrastructure as Code) is used to configure it. The main kind of configuration format used for this is Yaml followed by Xml and Java based scripting formats.
 
@@ -124,10 +124,10 @@ It would have been really interesting to do a full in depth analysis of each CI 
 
 \section{Related Works}
 \vspace*{-0.05in}
-\subsection{Continuos Integration}
+\subsection{Continuous Integration}
 \vspace*{-0.05in}
 
-Continuos Integration is frequently submitting work normally tied into a feedback loop. For example using version control and committing changes daily. For each changed committed a server builds and tests the changes informing you of status of those changes. As well as providing a build which is typically a binary executable of code that can then be saved if necessary. In doing you can reduce the chances of facing the situation off \enquote{It works on my machine...}. As the building and packaging of the code is done on a server to make sure everything integrates.
+Continuous Integration is frequently submitting work normally tied into a feedback loop. For example using version control and committing changes daily. For each changed committed a server builds and tests the changes informing you of status of those changes. As well as providing a build which is typically a binary executable of code that can then be saved if necessary. In doing you can reduce the chances of facing the situation off \enquote{It works on my machine...}. As the building and packaging of the code is done on a server to make sure everything integrates.
 
 An early definition of CI was written up and then updated later by Martin Fowler \cite{CI2010_MartinFowler}. A key part of the CI is that allows teams to work on the same code base which without CI could easily lead to integration bugs and broken builds. 
 
@@ -298,7 +298,7 @@ Out of the 94,379 projects 42.25\% of them had CI configuration files in them in
 
 \input{comparison_table.tex}
 % table references are not working because the table was being rendered below the reference.... ah! but it's fixed atm 
-An interesting factor in Table \ref{table:comparison_dataset} is the percentage of that 38\% that has multiple CI in them. This is because configuration files can be used to CI or Continuos Deployment (CD) and some projects are run a monorepo which means that they have multiple projects inside them. Another simple explanation is that although the configuration is stored version control it just hasn't been deleted. 
+An interesting factor in Table \ref{table:comparison_dataset} is the percentage of that 38\% that has multiple CI in them. This is because configuration files can be used to CI or Continuous Deployment (CD) and some projects are run a monorepo which means that they have multiple projects inside them. Another simple explanation is that although the configuration is stored version control it just hasn't been deleted. 
 
 We scraped the \enquote{ReadMe.md} files from the projects to check if they had a CI status label in them as shown in Figure \ref{ExampleGitHubReadme}. To do this we checked for \verb|alt="Build Status"|, \verb|alt=`Build Status'|, \verb|Status| and \verb|status| being in the file. Then if that same line of text contained a url specified by if contained \verb|http://| or \verb|https://| then we counted it as potentially being a project that used CI. In order to check the validity of this method we ran it on all projects that we had found configuration files for. We got 6782 (55.92\%) \todo{REDO with new data to get the stats to line up but only metha}projects with a ReadMe that had a CI status label that we could find. 
 However this method is not perfect, for example \enquote{awesome-bootstrap-checkbox} by \enquote{flatlogic} \cite{GithubReadMeIncorrectFind} their ReadMe has the following line:
