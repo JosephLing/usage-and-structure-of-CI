@@ -729,28 +729,82 @@ def comparison(data, col, val, old_data=False):
     return data[data[col] == val]
 
 
-def get_last_years_ci_usage(sorted_data, data, col=None, col2=None, val=None):
+def get_last_years_ci_usage(sorted_data, data, col=None, col2=None, val=None, commit_n=1,r=None,all=True):
+    export = []
     print("Searching for the last 5 years for {} {}".format(
         val, len(comparison(data, col2, val, True))))
     ci = 0
     total = 0
-    for i in range(6, 5*12, 6):
+
+    if r is None:
+        r = range(6, 5*12, 6)
+
+    for i in r:
         temp_ci = comparison(get_last_timeframe(
-            sorted_data, "commit_1", "{}M".format(i)), col, val)["id"].nunique() - ci
+            sorted_data, "commit_{}".format(commit_n), "{}M".format(i)), col, val)["id"].nunique() - ci
         temp_total = len(comparison(get_last_timeframe(
-            data, "recent_commit1", "{}M".format(i)), col2, val, True)) - total
+            data, "recent_commit{}".format(commit_n), "{}M".format(i)), col2, val, True)) - total
         ci += temp_ci
         total += temp_total
         if temp_total > 0:
+            export.append({"time":i, "total": temp_total, "ci": temp_ci, "perc":temp_ci/temp_total*100})
             print("month: {} total: {} ci: {} perc: {}".format(
                 i, temp_total, temp_ci, temp_ci/temp_total*100))
         else:
             print("month: {} no data")
-    ci = comparison(sorted_data, col, val)["id"].nunique() - ci
-    total = len(comparison(data, col2, val, True)) - total
-    print("total: {} ci: {} perc: {} (older than 5 years)".format(
+    
+    if all:
+        ci = comparison(sorted_data, col, val)["id"].nunique() - ci
+        total = len(comparison(data, col2, val, True)) - total
+        print("total: {} ci: {} perc: {} (older than 5 years)".format(
         total, ci, ci/total*100))
 
+        export.append({"time": "all", "total": total, "ci": ci, "perc":ci/total*100})
+    
+    return export
+
+
+def get_commit_graphs(sorted_data, orginal_data):
+    # for i in [1,2,3]:
+    #         data = get_last_years_ci_usage(sorted_data, orginal_data, "lang", "language", commit_n=i)
+    #         plt.plot([k["time"] for k in data], [k["perc"] for k in data], label="prev {} commit".format(i))
+
+    # plt.xlabel("time")
+    # plt.xticks(rotation=45)
+
+    # plt.ylabel("percentage CI usage")
+    # plt.legend()
+    # save_as_pdf(plt, "last 5 years of commits sampled every 2 months (including older commits at the end)")
+
+
+    # for i in [1,2,3]:
+    #     data = get_last_years_ci_usage(sorted_data, orginal_data, "lang", "language", commit_n=i,r=range(1,2*3*12,2), all=False)
+    #     plt.plot([k["time"] for k in data], [k["perc"] for k in data], label="prev {} commit".format(i))
+
+    # plt.xlabel("time")
+    # plt.xticks(rotation=45)
+
+    # plt.ylabel("percentage CI usage")
+    # plt.legend()
+    # save_as_pdf(plt, "last 3 years of commits sampled every 2 months")
+
+    for lang in ["JavaScript","Python", "TypeScript", "Go", "C++", "Java","Rust", "PHP", "Ruby", "C"]:
+        print("getting data for the last 12 months for: {}".format(lang))   
+        data = get_last_years_ci_usage(sorted_data, orginal_data, "lang","language", lang, r=range(1,7,1),all=False)
+        data.reverse()
+        plt.plot([k["time"] for k in data], [k["perc"] for k in data], label="{}".format(lang))
+
+
+    # data = get_last_years_ci_usage(sorted_data, orginal_data, None, None)
+    # plt.plot([k["time"] for k in data], [k["perc"] for k in data], label="all")
+    plt.xlabel("time")
+    plt.ylabel("percentage CI usage")
+    plt.xticks(rotation=45)
+    plt.rc(({'font.size': 5}))
+
+    plt.legend()
+
+    save_as_pdf(plt, "test lang corrected")
 
 def main(experimenting, name1, name2, image_encoding, output="."):
     if experimenting:
@@ -799,20 +853,29 @@ def main(experimenting, name1, name2, image_encoding, output="."):
         # save_as_pdf(lines_against_scripts(sorted_data[sorted_data["yaml"]]), f"{output}/scripts vs lines", image_encoding)
         # save_as_pdf(stars_against_lines(sorted_data), f"{output}/scripts vs stars", image_encoding)
         sorted_data = load_dataframe(name2)
-        data = pd.read_csv("2020 combined.csv", dtype={"id": int, "language": str}, parse_dates=[
+        orginal_data = pd.read_csv("2020 combined.csv", dtype={"id": int, "language": str}, parse_dates=[
                            "recent_commit1", "recent_commit2", "recent_commit3"])
-        # get_last_years_ci_usage(sorted_data, data, None, None)
-        # get_last_years_ci_usage(sorted_data, data, "lang","language", "Rust")
-        # get_last_years_ci_usage(sorted_data, data, "lang","language", "JavaScript")
-        # get_last_years_ci_usage(sorted_data, data, "lang","language", "Go")
-        # get_last_years_ci_usage(sorted_data, data, "lang","language", "Python")
-        # get_last_years_ci_usage(sorted_data, data, "lang","language", "C++")
-        # get_last_years_ci_usage(sorted_data, data, "lang","language", "Java")
+        
+        
+        get_commit_graphs(sorted_data, orginal_data)
+        # commit_n = 1
+        # points = []
+        # total = len(orginal_data)
+        # for i in range(1,90):
+        #     points.append((i, len(get_last_timeframe(orginal_data, "recent_commit{}".format(commit_n), "{}M".format(i)))/total*100))
+        
+        # plt.xticks(rotation=90)
+        
+        # plt.plot(["{}M".format(v[0]) for v in points], [v[1] for v in points])
+        # save_as_pdf(plt, "test most recent question")
 
-        get_last_years_ci_usage(sorted_data, data, "lang", "language")
+        
+
+        # get_last_years_ci_usage(sorted_data, data, "lang", "language", commit_n=2)
+        # get_last_years_ci_usage(sorted_data, data, "lang", "language", commit_n=3)
 
         # recent_commit1 = get_last_timeframe(data, "recent_commit1", "12M")
-
+        
         # print("There are {} repositories that had their last commit in the last year. This is {} percentage of the total sample size.".format(len(recent_commit1), len(recent_commit1)/len(data)*100))
         # print("Out of all the last commits {} had CI".format(len(commit1)/len(recent_commit1)*100))
 
@@ -907,7 +970,7 @@ def main(experimenting, name1, name2, image_encoding, output="."):
 
 if __name__ == '__main__':
     # data = main(True, "2019 combined.csv", "2019 yaml threaded.csv", "pdf", "./results")
-    data = main(False, "2020 combined.csv",
+    data = main(True, "2020 combined.csv",
                 "2020 yaml threaded5.csv", "pdf", "./results")
     # data = main(False, "combined9.csv", "yaml threaded14.csv", "svg", "./results")
     # main(True, "combined1.csv", "yaml threaded6.csv", "svg", "./results")
