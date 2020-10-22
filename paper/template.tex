@@ -44,6 +44,10 @@
 % \renewcommand{\linenumberfont}{\normalfont\bfseries\small\color{periwinkle}}
 \usepackage{todonotes}
 
+\usepackage{collab}  % [hideall]
+\collabAuthor{sm}{red}{Stefan}
+
+
 \usepackage[autostyle]{csquotes}
 
 \setcitestyle{numbers}
@@ -82,7 +86,30 @@ email address or ORCID}
 % NOTE: have to careful when doing time comparisons as currently I am doing it as time windows so "last 2 years" doesn't work as that is 2 years of data not 1 year
 
 \begin{abstract}
-  Continuos integration (CI) is becoming more popular as software development moves to an Agile fast paced development life cycle. Most CI is done automatically using a service which runs based off configuration. Our major questions is how much is CI actually being used? As well as how are these files being structured? We got 94,379 open source projects from Github to answer these questions. In doing so compared our results against \citet{Hilton2016} work to see if their has been a increase in usage. We found a shift in CI services being used and were able to get similar results to their study. In terms of structure we found that configuration files are written with no comments normally. We suggest at the end further research is needed to get a better understanding of this growing field.    
+  \sm{is Sanner double blind?}
+
+Continuous integration (CI) is widely popular
+for instance as support for fast-paced development cycle.
+\sm{do we want to frame the paper around a reproduction of the earlier study?
+Since this seems to be the strongest part, I would start out with this.
+Pose the question of whether things have changed since people looked at it last.}
+This paper investigates how CI is currently used by projects on GitHub.
+To our knowledge, the last major study was in 2016
+by \citeauthor{Hilton2016}\citep{Hilton2016}
+and we want to see how things changed in the last 5 years.
+% In doing so compared our results against \citet{Hilton2016} work to see if their has been a increase in usage.
+
+We analyze 94,379 open source projects from GitHub % to answer these questions.
+to understand how CI is used based on the corresponding configuration files.
+
+% Most CI is done automatically using a service which runs based off configuration.
+% Our major questions is how much is CI actually being used?
+%As well as how are these files being structured?   
+We found a shift in CI services being used.\sm{can we give an example here?
+trying to summarize the results a little}
+% and were able to get similar results to their study.
+\sm{for the structure, I'd suggest to use something else than the comment bit}
+% In terms of structure we found that configuration files are written with no comments normally. We suggest at the end further research is needed to get a better understanding of this growing field.
 \end{abstract}
 
 
@@ -90,9 +117,9 @@ email address or ORCID}
 \section{Introduction}
 \label{Introduction}
 
-Continuos integration (CI) is becoming more popular over the last few years. This can be seen by how major version control hosting services Github, Bitbucket and Gitlab have all released CI products or have been improving their CI products. In terms of research, Infrastructure as Code in \citet{Rahman2019} which does a systematic mapping of research in that area. For Continuous Integration with \citet{Shahin2017} which does another systematic review on how it is used. These two papers demonstrate some of breadth of research that has taken place. In addition you have papers like Google's Innovation Factory: Testing, Culture, and Infrastructure \citet{Copeland2010} which demonstrate some of the depth that the papers go into.
+Continuous integration (CI) is becoming more popular over the last few years. This can be seen by how major version control hosting services GitHub, Bitbucket and Gitlab have all released CI products or have been improving their CI products. In terms of research, Infrastructure as Code in \citet{Rahman2019} which does a systematic mapping of research in that area. For Continuous Integration with \citet{Shahin2017} which does another systematic review on how it is used. These two papers demonstrate some of breadth of research that has taken place. In addition you have papers like Google's Innovation Factory: Testing, Culture, and Infrastructure \citet{Copeland2010} which demonstrate some of the depth that the papers go into.
 
-Continuos Integration is a process of automatically compiling, running tests and checking that the product works. This is can be combined with Continuos Delivery where the product is deployed or released after it has gone through successfully CI. 
+Continuous Integration is a process of automatically compiling, running tests and checking that the product works. This is can be combined with Continuous Delivery where the product is deployed or released after it has gone through successfully CI. 
 
 This can get complicated quickly therefore Configuration as Code (or Infrastructure as Code) is used to configure it. The main kind of configuration format used for this is Yaml followed by Xml and Java based scripting formats.
 
@@ -120,10 +147,10 @@ It would have been really interesting to do a full in depth analysis of each CI 
 
 \section{Related Works}
 \vspace*{-0.05in}
-\subsection{Continuos Integration}
+\subsection{Continuous Integration}
 \vspace*{-0.05in}
 
-Continuos Integration is frequently submitting work normally tied into a feedback loop. For example using version control and committing changes daily. For each changed committed a server builds and tests the changes informing you of status of those changes. As well as providing a build which is typically a binary executable of code that can then be saved if necessary. In doing you can reduce the chances of facing the situation off \enquote{It works on my machine...}. As the building and packaging of the code is done on a server to make sure everything integrates.
+Continuous Integration is frequently submitting work normally tied into a feedback loop. For example using version control and committing changes daily. For each changed committed a server builds and tests the changes informing you of status of those changes. As well as providing a build which is typically a binary executable of code that can then be saved if necessary. In doing you can reduce the chances of facing the situation off \enquote{It works on my machine...}. As the building and packaging of the code is done on a server to make sure everything integrates.
 
 An early definition of CI was written up and then updated later by Martin Fowler \cite{CI2010_MartinFowler}. A key part of the CI is that allows teams to work on the same code base which without CI could easily lead to integration bugs and broken builds. 
 
@@ -133,7 +160,7 @@ To enable to this to happen automation needs to put in place for build, testing 
 \subsection{Usage of Continuous Integration}
 \vspace*{-0.05in}
 
-The actual usage of CI was looked at by \cite{Hilton2016}. In this they use three source of information Github repositories, Travis builds and a survey. The impact of CI usage on Github was looked as well in \citet{Vasilescu2015}. The key difference is that we will be looking at the configuration alongside the CI usage and leaving impact of CI on the project to further research or current existing research. In analysing that data they found that \enquote{The trends that we discovered point to an expected growth of CI. In the future, CI will have an even greater influence than it has today.} As we are looking at the same question we will use four of the research questions out of the fourteen (\ref{section:RQ1}, \ref{section:RQ2}, \ref{section:RQ3}). In order to see what difference four years has made to the growth of usage of CI.
+The actual usage of CI was looked at by \cite{Hilton2016}. In this they use three source of information GitHub repositories, Travis builds and a survey. The impact of CI usage on GitHub was looked as well in \citet{Vasilescu2015}. The key difference is that we will be looking at the configuration alongside the CI usage and leaving impact of CI on the project to further research or current existing research. In analysing that data they found that \enquote{The trends that we discovered point to an expected growth of CI. In the future, CI will have an even greater influence than it has today.} As we are looking at the same question we will use four of the research questions out of the fourteen (\ref{section:RQ1}, \ref{section:RQ2}, \ref{section:RQ3}). In order to see what difference four years has made to the growth of usage of CI.
 
 In addition to comparing to the previous study we will also look into how CI usage changed over the years. \todo{basically want to expand on \ref{section:RQ3}might also move some stuff out of RQ3 to make it more of a straight up comparison}
 
@@ -147,8 +174,8 @@ For the CI systems we pick we will look into the tooling around that to aid the 
 
 \section{Methodology}
 \label{methodology}
-% here we want to describe why we went with Github over GhTorrent 
-In order to answer the research questions we needed to find projects for CI configuration files. This is because we needed to get the contents of the configuration in order to analyse the structure of it. We chose to scrape Github via their API as it was easy to setup and test whether or not it was working as there is a one-to-one mapping between the API and user interface. Using Ghtorrent \citet{GhTorrent2020} it may have been easier to gather more data because the rate limiting wasn't as strict. Yet harder to test whether or not it is working. Therefore we decide to use the Github API as the source for our corpus.
+% here we want to describe why we went with GitHub over GhTorrent 
+In order to answer the research questions we needed to find projects for CI configuration files. This is because we needed to get the contents of the configuration in order to analyse the structure of it. We chose to scrape GitHub via their API as it was easy to setup and test whether or not it was working as there is a one-to-one mapping between the API and user interface. Using Ghtorrent \citet{GhTorrent2020} it may have been easier to gather more data because the rate limiting wasn't as strict. Yet harder to test whether or not it is working. Therefore we decide to use the GitHub API as the source for our corpus.
 
 \begin{figure}[!htbp]
   \centering
@@ -156,7 +183,7 @@ In order to answer the research questions we needed to find projects for CI conf
     \centering
     \includegraphics[scale=0.5]{repository file system.png}
     
-    \caption[alt text]{Example Github repository that has multiple configuration types in it \cite{GithubRepoExample}. (This is an old repository that was reused in order to test out the scraper)}
+    \caption[alt text]{Example GitHub repository that has multiple configuration types in it \cite{GithubRepoExample}. (This is an old repository that was reused in order to test out the scraper)}
     \label{image_example_repo}
   \end{minipage}%
   \hfill
@@ -189,7 +216,7 @@ In order to answer the research questions we needed to find projects for CI conf
 
 We chose to use a config file to specify which CI systems configuration files we would look for. If it was a directory then it would get all \enquote{.yaml} or \enquote{.yml} along with any Teamcity \enquote{.kts} and \enquote{.xml} files. However the script did not look into any of the sub directories which might be the cause for the low number of Teamcity configuration files found. In the case that it was a file that was on the top level directory we matched it with the lowercase file name we found against the query.
 
-In terms of which configuration files to pick we based our list from Github Welcomes all CI Tools blog post in 2017 \cite{Github2017}. In addition we added Github Actions and Azure Pipelines to the list as they are new and potentially popular systems. 
+In terms of which configuration files to pick we based our list from GitHub Welcomes all CI Tools blog post in 2017 \cite{Github2017}. In addition we added GitHub Actions and Azure Pipelines to the list as they are new and potentially popular systems. 
 
 
 \begin{tikzpicture}[node distance = 2cm, auto]
@@ -210,42 +237,42 @@ In terms of which configuration files to pick we based our list from Github Welc
   \label{image_methadolgoy_diagram}
 \end{figure}
 
-As can be seen in Figure \ref{image_methadolgoy_diagram} a query based on the number of stars a project has on Github. This is because we need a way of getting a large sample from Github without introducing too much bais into the sample. That is not too say that our method is perfect but it provides an easy way to get a large sample that includes projects with and without CI.
-Another potential solution would have been to use the \enquote{filename:travis.yaml} search API. However this did not provide information about which projects did not use CI. Additionally for one unique search their can only be 1000 results returned by the Github API. To mitigate that limit we search based stars as we did do a search for a 1000 results per star count. The limitation of this though was that there will be over a 1000 repositories that have 0 to 500 or even 500 to 501 stars. That means it is a sample that represents some of the population but not a sample of all CI files on Github. 
+As can be seen in Figure \ref{image_methadolgoy_diagram} a query based on the number of stars a project has on GitHub. This is because we need a way of getting a large sample from GitHub without introducing too much bais into the sample. That is not too say that our method is perfect but it provides an easy way to get a large sample that includes projects with and without CI.
+Another potential solution would have been to use the \enquote{filename:travis.yaml} search API. However this did not provide information about which projects did not use CI. Additionally for one unique search their can only be 1000 results returned by the GitHub API. To mitigate that limit we search based stars as we did do a search for a 1000 results per star count. The limitation of this though was that there will be over a 1000 repositories that have 0 to 500 or even 500 to 501 stars. That means it is a sample that represents some of the population but not a sample of all CI files on GitHub. 
 
-As the config could have mistakes in it or we missed out a major CI system. We also saved the ReadMe.md when we scraped each project. A Readme.md is used to describe a project and will be displayed on Github at the bottom of the root directory. As can be seen in Figure \ref{ExampleGithubReadme} some ReadMe's have a label and/or links to the CI system used for that project. Therefore we also saved that data when we scraped a project. 
+As the config could have mistakes in it or we missed out a major CI system. We also saved the ReadMe.md when we scraped each project. A Readme.md is used to describe a project and will be displayed on GitHub at the bottom of the root directory. As can be seen in Figure \ref{ExampleGitHubReadme} some ReadMe's have a label and/or links to the CI system used for that project. Therefore we also saved that data when we scraped a project. 
 
 \begin{figure}[!t]
   \centering
   \includegraphics[scale=0.5, width=2.5in]{2020-01-30-08-29-04.png}
   
-  \caption[alt text]{Example of CI tag for Github ReadMe \cite{GithubReadMeExample}}
-  \label{ExampleGithubReadme}
+  \caption[alt text]{Example of CI tag for GitHub ReadMe \cite{GithubReadMeExample}}
+  \label{ExampleGitHubReadme}
 \end{figure}
 
-We ended up with searching for the following CI systems: Travis, Gitlab, Azure, App Veyor, Drone, Jenkins, Github, Circleci, Semaphore, Teamcity and Buildkite. 
+We ended up with searching for the following CI systems: Travis, Gitlab, Azure, App Veyor, Drone, Jenkins, GitHub, Circleci, Semaphore, Teamcity and Buildkite. 
 
-We excluded Wrecker from the search because they represented a very small number of projects in comparison to the other projects. As it seems since the Github survey in 2017 they got bought by Oracle and from doing a search on Github for what we think based on the docs \cite{WreckerDocs} and \cite{WreckerOpenSourceGithubSearch} for their configuration file naming convention. We were only able to find 20 results so did not include in the scraping script to speed up the process of searching for the other configuration file formats. Despite it being used in the \citet{Hilton2016} paper.
+We excluded Wrecker from the search because they represented a very small number of projects in comparison to the other projects. As it seems since the GitHub survey in 2017 they got bought by Oracle and from doing a search on GitHub for what we think based on the docs \cite{WreckerDocs} and \cite{WreckerOpenSourceGithubSearch} for their configuration file naming convention. We were only able to find 20 results so did not include in the scraping script to speed up the process of searching for the other configuration file formats. Despite it being used in the \citet{Hilton2016} paper.
 
-Along with information of what CI is being used for a project we also gathered metadata about the project. The available metadata through the API is largely what can been seen on a repository for example in Figure \ref{ExampleGithubMetaData}. We have the star count which is an indication how popular a project is as users can star projects that they like \citet{Borges2016}. Then we have watchers which is users that have subscribed to the project to get notifications about the project. 
+Along with information of what CI is being used for a project we also gathered metadata about the project. The available metadata through the API is largely what can been seen on a repository for example in Figure \ref{ExampleGitHubMetaData}. We have the star count which is an indication how popular a project is as users can star projects that they like \citet{Borges2016}. Then we have watchers which is users that have subscribed to the project to get notifications about the project. 
 
 \begin{figure}[h]
   \centering
   \includegraphics[scale=0.5, width=2.5in]{readme metadata example.png}
-  \caption[alt text]{Example Github project description and metadata\cite{GithubMetaDataExample}. The orange sections sections highlighted are the metadata that we scraped.}
-  \label{ExampleGithubMetaData}
+  \caption[alt text]{Example GitHub project description and metadata\cite{GithubMetaDataExample}. The orange sections sections highlighted are the metadata that we scraped.}
+  \label{ExampleGitHubMetaData}
 \end{figure}
 
 \vspace*{-0.05in}
 \subsection{Data corpus}
 \label{section:corpus}
 \vspace*{-0.05in}
-This all produced a sample of 32,660 projects from open source projects on Github. As can be seen in Figure \ref{graph_scatter_stars_vs_subs} we weren't able to scrape the whole star count range easily. This is because the script would crash when Github gave a 500 error code at us randomly. Along with empty repositories initially causing a problem. In order to mitigate the damage of this the scraper would create a new Comma Separated Value (csv) file search e.g. one for stars:0..1 and another for stars:1..2. As all the csv file contained the same header we ran a script to combine all together at the end. Making sure to remove any duplicates by filtering on the Github project id.
+This all produced a sample of 32,660 projects from open source projects on GitHub. As can be seen in Figure \ref{graph_scatter_stars_vs_subs} we weren't able to scrape the whole star count range easily. This is because the script would crash when GitHub gave a 500 error code at us randomly. Along with empty repositories initially causing a problem. In order to mitigate the damage of this the scraper would create a new Comma Separated Value (csv) file search e.g. one for stars:0..1 and another for stars:1..2. As all the csv file contained the same header we ran a script to combine all together at the end. Making sure to remove any duplicates by filtering on the GitHub project id.
 
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=2.5in]{../src/results/sub vs stars.pdf}
-  \caption[alt text]{Github stars against subscribers}
+  \caption[alt text]{GitHub stars against subscribers}
   \label{graph_scatter_stars_vs_subs}
 \end{figure}
 
@@ -253,11 +280,11 @@ This all produced a sample of 32,660 projects from open source projects on Githu
 \subsection{Comparison corpus info}
 \label{section:HiltonComaprisonCoprusTHing}
 \vspace*{-0.05in}
-In \citet{Hilton2016} paper they use a similar method of using the Github API in order to create their corpus. Additionally they contacted Cloud Bees \citet{CloudBees2020} to get a list of all open source projects that used their services. This helped them not to miss out on projects that they would otherwise missed out on. They kindly gave a copy of their final corpus. 
+In \citet{Hilton2016} paper they use a similar method of using the GitHub API in order to create their corpus. Additionally they contacted Cloud Bees \citet{CloudBees2020} to get a list of all open source projects that used their services. This helped them not to miss out on projects that they would otherwise missed out on. They kindly gave a copy of their final corpus. 
 
 However it does contain the data on the Cloud Bees projects which is 223 projects. As far as we can tell this only affects the comparison done in RQ2 \ref{section:RQ2}. Additionally we found slight discrepancies between the paper and corpus in RQ1, RQ2 and RQ3, these being mainly mainly just a few numbers off in a few places. In order to do comparisons well and to keep it consistent we will be basing all our comparisons from the corpus. As the discrepancies are small we will still be using the conclusions from the paper where possible.  
 
-In order to get a better understanding of the results of the methodologies chosen in both cases. We created two histograms to showing the density by the stars of the spread of data using the Sturge's rule (Figure \ref{graph:hist}). As we expected both corpses are skewed to the left. They use a logarithmic scale and initially it can look like there more data in 2020 corpus. However it is just more spread over the stars and potentially had a larger search range used. In Figure \ref{graph:hist2016} there is data after 40,000 stars potentially this could be down to the search method used or that most projects weren't dispersed over so many stars on Github.   
+In order to get a better understanding of the results of the methodologies chosen in both cases. We created two histograms to showing the density by the stars of the spread of data using the Sturge's rule (Figure \ref{graph:hist}). As we expected both corpses are skewed to the left. They use a logarithmic scale and initially it can look like there more data in 2020 corpus. However it is just more spread over the stars and potentially had a larger search range used. In Figure \ref{graph:hist2016} there is data after 40,000 stars potentially this could be down to the search method used or that most projects weren't dispersed over so many stars on GitHub.   
 
 \begin{figure}[!htbp]
   \centering
@@ -294,9 +321,9 @@ Out of the 94,379 projects 42.25\% of them had CI configuration files in them in
 
 \input{comparison_table.tex}
 % table references are not working because the table was being rendered below the reference.... ah! but it's fixed atm 
-An interesting factor in Table \ref{table:comparison_dataset} is the percentage of that 38\% that has multiple CI in them. This is because configuration files can be used to CI or Continuos Deployment (CD) and some projects are run a monorepo which means that they have multiple projects inside them. Another simple explanation is that although the configuration is stored version control it just hasn't been deleted. 
+An interesting factor in Table \ref{table:comparison_dataset} is the percentage of that 38\% that has multiple CI in them. This is because configuration files can be used to CI or Continuous Deployment (CD) and some projects are run a monorepo which means that they have multiple projects inside them. Another simple explanation is that although the configuration is stored version control it just hasn't been deleted. 
 
-We scraped the \enquote{ReadMe.md} files from the projects to check if they had a CI status label in them as shown in Figure \ref{ExampleGithubReadme}. To do this we checked for \verb|alt="Build Status"|, \verb|alt=`Build Status'|, \verb|Status| and \verb|status| being in the file. Then if that same line of text contained a url specified by if contained \verb|http://| or \verb|https://| then we counted it as potentially being a project that used CI. In order to check the validity of this method we ran it on all projects that we had found configuration files for. We got 6782 (55.92\%) \todo{REDO with new data to get the stats to line up but only metha}projects with a ReadMe that had a CI status label that we could find. 
+We scraped the \enquote{ReadMe.md} files from the projects to check if they had a CI status label in them as shown in Figure \ref{ExampleGitHubReadme}. To do this we checked for \verb|alt="Build Status"|, \verb|alt=`Build Status'|, \verb|Status| and \verb|status| being in the file. Then if that same line of text contained a url specified by if contained \verb|http://| or \verb|https://| then we counted it as potentially being a project that used CI. In order to check the validity of this method we ran it on all projects that we had found configuration files for. We got 6782 (55.92\%) \todo{REDO with new data to get the stats to line up but only metha}projects with a ReadMe that had a CI status label that we could find. 
 However this method is not perfect, for example \enquote{awesome-bootstrap-checkbox} by \enquote{flatlogic} \cite{GithubReadMeIncorrectFind} their ReadMe has the following line:
 \begin{verbatim}
   [![Dependency Status]
@@ -312,9 +339,9 @@ One possible reason could be because in RQ3 \ref{section:RQ3} it shows that the 
 
 Another possible reason could be if you combined the \enquote{Found CI} and \enquote{ReadMe has CI status} results together for 2020 you would get 41.28\% which is shows that our sample is within the margins of the same results that of CI usage for 2016.
 
-A further possible explanation Github's growth over the last 4 years (\citet{GithubOctoverseResults2016} to 2019 \citet{GithubOctoverseResults}) so that Github is now at 40 million active users. It means that there are more projects that are using CD setups for building their static sites and in general Github is being used for more things that wouldn't require CI.
+A further possible explanation GitHub's growth over the last 4 years (\citet{GithubOctoverseResults2016} to 2019 \citet{GithubOctoverseResults}) so that GitHub is now at 40 million active users. It means that there are more projects that are using CD setups for building their static sites and in general GitHub is being used for more things that wouldn't require CI.
 
-We think that the last two factors are the most likely contributors to why there is less CI usage now. Another important interesting aspect is that despite Github growing so much the CI usage rate has stayed relatively the same. 
+We think that the last two factors are the most likely contributors to why there is less CI usage now. Another important interesting aspect is that despite GitHub growing so much the CI usage rate has stayed relatively the same. 
 
 
 
@@ -324,7 +351,7 @@ We think that the last two factors are the most likely contributors to why there
 \subsection{\textbf{RQ2}: What CI systems are projects using?}
 \label{section:RQ2}
 \vspace*{-0.05in}
-In Table \ref{table_config_types} we, like all other research, found that Travis is the most popular CI system in use. However over the last 4 years the \cite{Github2017} CircleCi has lost out on it's rough quarter that it owned in the market. Notably the rise of Github Actions seems to have taken second place in the market share even though it is still very young in comparison as it was officially released November 13th 2019 but had a closed beta since the summer of 2019. This might not be down to the CircleCi losing out on their existing share, but maybe due to the rise in CI usage on Github. As well as because we searched Github for projects Github's CI product would be popular on their platform.
+In Table \ref{table_config_types} we, like all other research, found that Travis is the most popular CI system in use. However over the last 4 years the \cite{Github2017} CircleCi has lost out on it's rough quarter that it owned in the market. Notably the rise of GitHub Actions seems to have taken second place in the market share even though it is still very young in comparison as it was officially released November 13th 2019 but had a closed beta since the summer of 2019. This might not be down to the CircleCi losing out on their existing share, but maybe due to the rise in CI usage on GitHub. As well as because we searched GitHub for projects GitHub's CI product would be popular on their platform.
 
 \input{../src/results/configuration type count.tex}
 
@@ -342,13 +369,13 @@ In Table \ref{table_config_types} we, like all other research, found that Travis
   \caption[]{2020 corpus}
   \label{graph:config_bar2020}
   \end{minipage}
-  \caption[]{Percentage bar graph showing the usage of each CI service. The key difference is how CircleCI has got a lower rank. Due to rise of Github Actions which only open to closed beta in August 2019}
+  \caption[]{Percentage bar graph showing the usage of each CI service. The key difference is how CircleCI has got a lower rank. Due to rise of GitHub Actions which only open to closed beta in August 2019}
   \label{graph:config_bars}
 
 \end{figure}
 
 \todo[]{double check this paragraph!!}
-Our sample size of repositories is 31,494 that as it is a representation of projects on Github so won't account for the whole of it. This means that although Wrecker had the smallest count of CI when researching of 20 projects. In Table \ref{table_config_types} we have configuration types that have lower counts. This is because that search for the 20 searched the whole of Github but the scraping was only able to do a small sample. Additionally there potentially could be faults in the scraping causing it show such low numbers for the last 3. 
+Our sample size of repositories is 31,494 that as it is a representation of projects on GitHub so won't account for the whole of it. This means that although Wrecker had the smallest count of CI when researching of 20 projects. In Table \ref{table_config_types} we have configuration types that have lower counts. This is because that search for the 20 searched the whole of GitHub but the scraping was only able to do a small sample. Additionally there potentially could be faults in the scraping causing it show such low numbers for the last 3. 
 
 % ------------------------------------------------------------------------------------------------------------------------------------
 \vspace*{-0.05in}
@@ -386,13 +413,13 @@ In Figure \ref{fig:test1} and \ref{fig:test2} we are comparing whether or not in
   \caption{Subs graph}
   \label{graph_percentage_subs}
 \end{figure}
-Figure \ref{graph_percentage_subs} uses the same method as Figure \ref{fig:comparison_percentage_star_usage} except it does it based the number of subscribers. Subscribers are users on Github who want to keep update on the changes to a project. This could range from core team members working on the project to people that want to be notified about a new release. 
+Figure \ref{graph_percentage_subs} uses the same method as Figure \ref{fig:comparison_percentage_star_usage} except it does it based the number of subscribers. Subscribers are users on GitHub who want to keep update on the changes to a project. This could range from core team members working on the project to people that want to be notified about a new release. 
 In looking at this metric the hypothesis was that it would have a sharper rise in percentage of projects using CI per subscriber. However that was not the case overall as the gradient is not as strong. There is no comparison to \cite{Hilton2016} because their final corpus does not contain the subscriber count for each project.
 
-That gives us a good look at how projects can be viewed through Github's metadata. 
+That gives us a good look at how projects can be viewed through GitHub's metadata. 
 
 
-Next we turn to what kind of programming languages are being used for CI. Figure \ref{graph:programming_langs_count_ci} shows the  top 20 programming languages by count and we can see that Javascript is the most common kind of project by a considerable margins. This was to be expected as it ties in with Github's annual report \cite{GithubOctoverseResults} on the platform they reported that Javascript has been the most popular programing language for the last 5 years. The interesting part is that our sample matches the rise in Python over Java. This is despite the fact that they are using \enquote{unique contributors to public and private repositories tagged with the appropriate primary language} and we are using the count of projects by primary programming language tag. 
+Next we turn to what kind of programming languages are being used for CI. Figure \ref{graph:programming_langs_count_ci} shows the  top 20 programming languages by count and we can see that Javascript is the most common kind of project by a considerable margins. This was to be expected as it ties in with GitHub's annual report \cite{GithubOctoverseResults} on the platform they reported that Javascript has been the most popular programing language for the last 5 years. The interesting part is that our sample matches the rise in Python over Java. This is despite the fact that they are using \enquote{unique contributors to public and private repositories tagged with the appropriate primary language} and we are using the count of projects by primary programming language tag. 
 
 \begin{figure}[!h]
   \centering
@@ -411,7 +438,7 @@ In order to get a better idea of the breakdown of the effect programming languag
 \end{figure}
 
 
-The most striking part of Figure \ref{graph:scatter_langauges_CI} is the clear divide between different programing languages star count. The programming with the languages with the highest CI usage are Rust (94.6\%), Typescript (86.56\%) and Go (78.31\%). This is interesting in that they are all fairly \enquote{new programming languages} in comparison to the others in the graph. They are all languages which are developed and open source on Github. In terms of Rust and Go it could be down to their tooling that comes built in to the language as that would lead to implementing CI to be a lot easier. Typescript is more a special case as it is a subset of Javascript so uses `npm' to deal with dependency management which was some of the inspiration for Rust's tooling \citet{RustBlogCargo}. Older programming languages like Java and C\# both have tooling for dependency management but the chances that they use CI is much lower. Therefore an area for further research would be whether or not the use of \enquote{modern} dependency management systems increases the chance of CI.
+The most striking part of Figure \ref{graph:scatter_langauges_CI} is the clear divide between different programing languages star count. The programming with the languages with the highest CI usage are Rust (94.6\%), Typescript (86.56\%) and Go (78.31\%). This is interesting in that they are all fairly \enquote{new programming languages} in comparison to the others in the graph. They are all languages which are developed and open source on GitHub. In terms of Rust and Go it could be down to their tooling that comes built in to the language as that would lead to implementing CI to be a lot easier. Typescript is more a special case as it is a subset of Javascript so uses `npm' to deal with dependency management which was some of the inspiration for Rust's tooling \citet{RustBlogCargo}. Older programming languages like Java and C\# both have tooling for dependency management but the chances that they use CI is much lower. Therefore an area for further research would be whether or not the use of \enquote{modern} dependency management systems increases the chance of CI.
 
 \begin{figure}[!h]
   \centering
@@ -542,7 +569,7 @@ Travis is the largest configuration type out of the sample by a significant amou
 \todo[]{check this}
 The assumption was that continuous integration setups can be complicated and have edge cases, therefore comments in the configuration would be used to describe and handle that complexity.
 
-An example of this in Figure \ref{fig:example_configuration_file} for Github Actions shows a number of the cases of comments. The first being including useful information about why a particular version of the programming language was chosen. The second is that the tests have been disabled by commenting them out. 
+An example of this in Figure \ref{fig:example_configuration_file} for GitHub Actions shows a number of the cases of comments. The first being including useful information about why a particular version of the programming language was chosen. The second is that the tests have been disabled by commenting them out. 
 
 \begin{table}[!b]
   \begin{tabular}{|l|l|}
@@ -586,7 +613,7 @@ An example of this in Figure \ref{fig:example_configuration_file} for Github Act
         #          pip install pytest
         #          pytest ./src
     \end{verbatim}
-    \caption{In order to pick up on all these different types of comments. All the CI files were parsed and then regular expressions were used to pick on up key factors such as \enquote{note:} along with multiple single line comments which made up a block/multi-line comment. For example in to the above there is an example Github Action yaml file. If were it would be parsed we would get: Table \ref{table:example_structure_data}.}
+    \caption{In order to pick up on all these different types of comments. All the CI files were parsed and then regular expressions were used to pick on up key factors such as \enquote{note:} along with multiple single line comments which made up a block/multi-line comment. For example in to the above there is an example GitHub Action yaml file. If were it would be parsed we would get: Table \ref{table:example_structure_data}.}
     \label{fig:example_configuration_file}
 \end{figure}
 
@@ -716,13 +743,13 @@ In Table \ref{table:scripts used} we can see the raw count found for each CI ser
 
 \section{Threats to validating}
 
-The major and most obvious threat is the sample's reliability and validity as it was gathered from scraping the data from Github. This has already been touched on in the \ref{methodology} section but now we are going to look at it in more detail critically.
+The major and most obvious threat is the sample's reliability and validity as it was gathered from scraping the data from GitHub. This has already been touched on in the \ref{methodology} section but now we are going to look at it in more detail critically.
 
-Firstly if we assume that the scraping works perfectly then it only has a maximum of 1000 open source projects per star. That is excluding closed source projects which would range from personal projects to companies. Additionally we only used data from Github not from Gitlab, bitbucket or other version control hosting services. This leads to bais in the data for example if Gitlab was also scraped then we would get a lot more Gitlab CI files. However in order to get the best spread of data Github has the best API and most of their services do not tie you down to use only their service. Also although we could get a 1000 projects per star we were still able to get around 30,000 projects and a wide spread across Github. The key aspect being that because it was a sample we focused on getting a good spread of data.
+Firstly if we assume that the scraping works perfectly then it only has a maximum of 1000 open source projects per star. That is excluding closed source projects which would range from personal projects to companies. Additionally we only used data from GitHub not from Gitlab, bitbucket or other version control hosting services. This leads to bais in the data for example if Gitlab was also scraped then we would get a lot more Gitlab CI files. However in order to get the best spread of data GitHub has the best API and most of their services do not tie you down to use only their service. Also although we could get a 1000 projects per star we were still able to get around 30,000 projects and a wide spread across GitHub. The key aspect being that because it was a sample we focused on getting a good spread of data.
 
 Secondly, the scraping script is not perfect in how it finds configuration files. This is because it only looks in the top level directory for the file name pattern described in their docs or unique folder. Therefore if the systems allowed many different names or different names in the past it wouldn't have picked it as a CI system. Additionally we only decided to scrape for certain CI files, yet we chose a good scope based on previous research into the top CI files. The scraping script has been tested and worked on to try and minimise any bugs. In the case that we did not pick up a CI file we ran a regexp against the ReadMe file to get a better understanding of the error bounds.
 
-Thirdly, identifying which projects are programming projects or would have a need for CI on Github and which are not. Based on the research \cite{Kalliamvakou2014} it is important to filter out repositories that aren't part of the question being asked. Therefore we could have looked to try and filter out Github static sites and other none software based projects. However if assume a certain type of project won't be using CI then we would be introducing bais when trying to answer how CI is used. For further research better categorising of projects would help a lot. The major difficulty would be if for example you had a static site that ran on Netlify that will be using CI/CD but very different from a Travis setup. Being able to get the correct data to be able to distinguish and analyse both situations. 
+Thirdly, identifying which projects are programming projects or would have a need for CI on GitHub and which are not. Based on the research \cite{Kalliamvakou2014} it is important to filter out repositories that aren't part of the question being asked. Therefore we could have looked to try and filter out GitHub static sites and other none software based projects. However if assume a certain type of project won't be using CI then we would be introducing bais when trying to answer how CI is used. For further research better categorising of projects would help a lot. The major difficulty would be if for example you had a static site that ran on Netlify that will be using CI/CD but very different from a Travis setup. Being able to get the correct data to be able to distinguish and analyse both situations. 
 
 
 \pagebreak
@@ -731,7 +758,7 @@ Thirdly, identifying which projects are programming projects or would have a nee
 
 \section{Summary}
 
-We got a sample of 32,660 open source projects from Github and were able to compare that to a previous study 4 years ago. In doing so we found that usage of CI projects was similar and that the more popular a project the higher chance it would be using CI. This linked with the research from 4 years ago. The major change was the increase in the popularity of Github Actions, which took over second place from CircleCi. Additionally we looked at whether or not the number of people watching the project had the same effect, it did but to a lesser extent.
+We got a sample of 32,660 open source projects from GitHub and were able to compare that to a previous study 4 years ago. In doing so we found that usage of CI projects was similar and that the more popular a project the higher chance it would be using CI. This linked with the research from 4 years ago. The major change was the increase in the popularity of GitHub Actions, which took over second place from CircleCi. Additionally we looked at whether or not the number of people watching the project had the same effect, it did but to a lesser extent.
 
 % something about the programming table thing we created 
 
