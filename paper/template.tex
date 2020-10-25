@@ -133,6 +133,8 @@ trying to summarize the results a little}
 \section{Introduction}
 \label{Introduction}
 
+\sm{I don't think this here gives the user a good intro.
+There are too many things going on, without actually saying much:}
 Industry fully embraces continuous integration (CI)
 and major code hosting services such as GitHub, Bitbucket, and Gitlab
 have CI products.
@@ -141,29 +143,55 @@ In terms of research, Infrastructure as Code in \citet{Rahman2019} which does a 
 Continuous Integration is a process of automatically compiling, running tests and checking that the product works. This is can be combined with Continuous Delivery where the product is deployed or released after it has gone through successfully CI. 
 
 This can get complicated quickly therefore Configuration as Code (or Infrastructure as Code) is used to configure it. The main kind of configuration format used for this is Yaml followed by Xml and Java based scripting formats.
+\sm{:end}
 
 
-In order to look at our first theme CI usage we looked at In Usage, Costs, and Benefits of Continuous Integration Open-Source Projects \cite{Hilton2016}. They looked closely at the usage of CI as well. As we are looking at CI usage as well we are going answer the first three questions from their theme \enquote{Usage of CI}. 
+\sm{this is an attempt to frame the goal of the paper:}
+
+Hilton et al.\citep{Hilton2016} investigate in \sm{can you determine from the data set when this happened?}
+how CI systems are used in open source project.
+It has been \ins{X} years since then,
+and with the rapid changes in industry usage,
+we wanted to understand how CI usage has changed since then.
+
+To this end, we revisit their research questions and based on their data set
+as well as a current one,
+we assess how things have changed.
+Specifically, we will answer the following research questions,
+based on the first three of Hilton et al.\citep{Hilton2016}:
+
+% In order to look at our first theme CI usage we looked at In Usage, Costs, and Benefits of Continuous Integration Open-Source Projects \cite{Hilton2016}. They looked closely at the usage of CI as well. As we are looking at CI usage as well we are going answer the first three questions from their theme \enquote{Usage of CI}.
 \begin{itemize}
   \item \textbf{RQ1} What percentage of open-source projects use CI?
-  \item \textbf{RQ2} What is the breakdown of different CI services?
-  \item \textbf{RQ3} Do certain types of projects use CI more than others?
-  \item \textbf{RQ 3.5} Do more recently contributed projects use CI?
+  \item \textbf{RQ2} Which CI services are used?
+  \item \textbf{RQ3} Do certain types of projects use CI more than other types of projects?
+  \item \textbf{RQ 3.5} Are newer projects more likely to use CI?
 \end{itemize}
+\sm{I rephrased those questions, because before they didn't really make sense to me from a language perspective.
+Do they still make sense?
+Can we adapt things to this?}
 
-We will be using doing a comparison with our corpus against theirs in order to work out what has changed over the last 4 years. 
+% We will be using doing a comparison with our corpus against theirs in order to work out what has changed over the last 4 years.
 
-It would have been really interesting to do a full in depth analysis of each CI configuration format like \citet{Gallaba2018} does for Travis. However we can look at the general structure of all the CI configuration files allowing for comparisons to be made between configuration files. As that will allow comparisons to be made more easily otherwise comparing very specific features would have been harder.
+In addition, we investigate how the CI configuration files are used.
+Currently, the tooling for these configuration languages is minimal
+and from our own practice, we know that maintaining them can be a lot of effort.
+To get a high-level overview of how they are used,
+we will answer the following research questions:
+%
+% It would have been really interesting to do a full in depth analysis of each CI configuration format like \citet{Gallaba2018} does for Travis. However we can look at the general structure of all the CI configuration files allowing for comparisons to be made between configuration files. As that will allow comparisons to be made more easily otherwise comparing very specific features would have been harder.
 \begin{itemize}
   % Could have "How are configuration files broken down?"
   % syntax errors, line counts, comment analysis all available but it's not quite coherrent
   % so combining into one and maybe even deleting script usage might be for the best.... or just adding it in there....
   % as it's about quality not quanity and there is a strict limit on words
-  \item \textbf{RQ4} What are the common errors when loading yaml configuration?
   \item \textbf{RQ5} How are comments used in the configuration?
   \item \textbf{RQ6} How are external scripts used within the configuration?
+  \item \textbf{RQ4} What are the common errors when loading yaml configuration?
 \end{itemize}
+\sm{reorder, should also be relabeled}
 
+\sm{would be good to eliminate the use of vspace}
 \section{Related Works}
 \vspace*{-0.05in}
 \subsection{Continuous Integration}
